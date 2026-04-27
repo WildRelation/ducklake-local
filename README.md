@@ -52,21 +52,33 @@ Login: `minioadmin` / `87654321`
 
 ## Step 2 — Set up the Python environment
 
+**Linux / macOS:**
 ```bash
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+**Windows (PowerShell):**
+```powershell
+python -m venv venv
+venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
 ---
 
-## Step 3 — Run the script
+## Step 3 — Verify the connection
+
+Run `main.py` once to confirm that DuckDB can connect to PostgreSQL and MinIO, and that DuckLake initializes correctly:
 
 ```bash
 python main.py
 ```
 
-On the first run DuckLake initializes the catalog in PostgreSQL. After that you are ready to create tables and insert data.
+You should see `Connected to local DuckLake.` and a list of tables (empty on the first run — that is expected).
+
+`main.py` is not the application — it is a starting point. The `connect()` function inside it is what you reuse in your own scripts to get a connection to the lake. The commented-out code at the bottom is just a reference example of how to create tables and insert data; you do not need to uncomment it.
 
 ---
 
