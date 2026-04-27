@@ -20,8 +20,14 @@ Both services run locally via Docker. DuckDB connects to them from Python.
 
 ## Prerequisites
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose)
 - Python 3.10+
+- Docker + Docker Compose:
+  - **Windows / macOS** — install [Docker Desktop](https://www.docker.com/products/docker-desktop/), Docker Compose is included
+  - **Linux** — install Docker Engine and then the Compose plugin separately:
+    ```bash
+    sudo apt install docker-compose-plugin   # Debian/Ubuntu
+    ```
+    Verify it works with `docker compose version`
 
 ---
 
