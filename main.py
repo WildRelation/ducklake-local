@@ -1,5 +1,4 @@
 import duckdb
-from minio import Minio
 
 # ── MinIO (local Docker) ─────────────────────────────────────────────────────
 MINIO_ENDPOINT = "localhost:9000"
@@ -13,14 +12,6 @@ PG_DB       = "ducklake"
 PG_USER     = "duck"
 PG_PASSWORD = "123456"
 PG_PORT     = 5432
-
-
-def ensure_bucket():
-    """Creates the MinIO bucket if it does not exist."""
-    client = Minio(MINIO_ENDPOINT, access_key=MINIO_USER, secret_key=MINIO_PASSWORD, secure=False)
-    if not client.bucket_exists(BUCKET_NAME):
-        client.make_bucket(BUCKET_NAME)
-        print(f"Bucket '{BUCKET_NAME}' created.")
 
 
 def connect():
@@ -52,7 +43,6 @@ def connect():
 
 
 def main():
-    ensure_bucket()
     con = connect()
     print("Connected to local DuckLake.\n")
 
@@ -72,9 +62,19 @@ def main():
     # ── Example: create a table and insert data ──────────────────────────────
     # Uncomment to try it out:
 
-    # con.execute("CREATE TABLE IF NOT EXISTS my_lake.main.test (id INT, name VARCHAR);")
-    # con.execute("INSERT INTO my_lake.main.test VALUES (1, 'Alice'), (2, 'Bob');")
-    # print(con.execute("SELECT * FROM my_lake.main.test").fetchdf())
+    # con.execute("""
+    #     CREATE TABLE IF NOT EXISTS my_lake.main.users (
+    #         id    INT,
+    #         name  VARCHAR,
+    #         email VARCHAR
+    #     );
+    # """)
+    # con.execute("""
+    #     INSERT INTO my_lake.main.users VALUES
+    #         (1, 'Alice', 'alice@example.com'),
+    #         (2, 'Bob',   'bob@example.com');
+    # """)
+    # print(con.execute("SELECT * FROM my_lake.main.users").fetchdf())
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ Local environment for developing and testing against a DuckLake instance before 
 DuckLake = PostgreSQL (catalog) + MinIO (parquet files)
 ```
 
-Both services run locally via Docker. DuckDB connects to them from Python.
+Both services run locally via Docker. DuckDB connects to them from Python. The bucket in MinIO is created automatically when the containers start.
 
 | Component | Local | Production (cbhcloud) |
 |---|---|---|
@@ -37,11 +37,13 @@ Both services run locally via Docker. DuckDB connects to them from Python.
 docker compose up -d
 ```
 
-This starts PostgreSQL and MinIO in the background. To stop them:
+This starts PostgreSQL and MinIO in the background and automatically creates the `ducklake` bucket. To stop them:
 
 ```bash
 docker compose down
 ```
+
+Your data is safe — it is stored in Docker volumes and survives restarts.
 
 You can access the **MinIO web console** at `http://localhost:9001`
 Login: `minioadmin` / `87654321`
@@ -64,7 +66,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-On the first run, DuckLake will initialize the catalog in PostgreSQL and create the bucket in MinIO automatically. After that you are ready to create tables and insert data.
+On the first run DuckLake initializes the catalog in PostgreSQL. After that you are ready to create tables and insert data.
 
 ---
 
@@ -100,5 +102,6 @@ print(con.execute("SELECT * FROM my_lake.main.users").fetchdf())
 | MinIO endpoint | `localhost:9000` | `ducklake-minio.app.cloud.cbh.kth.se` |
 | MinIO SSL | `false` | `true` |
 | SSH tunnel needed | No | Yes |
+| Bucket creation | Automatic (Docker) | Automatic (Docker) |
 
 The only changes needed to switch from local to production are the credentials and endpoints at the top of `main.py`.
