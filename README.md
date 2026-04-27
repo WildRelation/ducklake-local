@@ -94,6 +94,37 @@ print(con.execute("SELECT * FROM my_lake.main.users").fetchdf())
 
 ---
 
+## Interactive SQL shell (optional)
+
+Instead of writing Python, you can explore your DuckLake directly with the DuckDB UI in the browser.
+
+**Linux / macOS:**
+```bash
+chmod +x shell.sh
+./shell.sh
+```
+
+**Windows (PowerShell):**
+```powershell
+.\shell.ps1
+```
+
+This runs DuckDB inside a Docker container, connects to your local DuckLake automatically via `setup.sql`, and opens a web UI where you can run SQL queries interactively. Type `.exit` to close it.
+
+---
+
+## What we improved over a basic setup
+
+| Change | Why |
+|---|---|
+| `docker-compose.yml` → `compose.yml` | `compose.yml` is the modern standard for Docker Compose v2. The old filename is a legacy convention from v1. |
+| Health checks | Without them, the `mc` container tries to create the bucket before MinIO is ready and fails. Health checks make each service wait until the previous one is actually running. |
+| Volumes | Without volumes, all data is lost when you run `docker compose down`. Volumes store data outside the container so it survives restarts. |
+| Automatic bucket creation (`mc` container) | The bucket is created by Docker when the services start, not by the Python script. This means Python only needs to connect and query — no setup logic in the code. |
+| `minio` removed from `requirements.txt` | The Python `minio` package was only needed to create the bucket. Since Docker handles that now, it is no longer a dependency. |
+
+---
+
 ## Difference from production
 
 | | Local | Production |
