@@ -82,27 +82,62 @@ You should see `Connected to local DuckLake.` and a list of tables (empty on the
 
 ---
 
-## Creating tables and inserting data
+## CRUD operations
+
+DuckLake supports full CRUD directly from Python — no API needed. Run the included example:
+
+```bash
+python crud.py
+```
+
+### Create
 
 ```python
 con = connect()
 
 con.execute("""
-    CREATE TABLE IF NOT EXISTS my_lake.main.users (
+    CREATE TABLE IF NOT EXISTS my_lake.main.products (
         id    INT,
         name  VARCHAR,
-        email VARCHAR
-    );
+        price DOUBLE,
+        stock INT
+    )
 """)
 
 con.execute("""
-    INSERT INTO my_lake.main.users VALUES
-        (1, 'Alice', 'alice@example.com'),
-        (2, 'Bob',   'bob@example.com');
+    INSERT INTO my_lake.main.products VALUES
+        (1, 'Laptop',   9999.0, 15),
+        (2, 'Mouse',     299.0, 50),
+        (3, 'Keyboard', 1299.0, 30)
 """)
-
-print(con.execute("SELECT * FROM my_lake.main.users").fetchdf())
 ```
+
+### Read
+
+```python
+con.execute("SELECT * FROM my_lake.main.products").fetchdf()
+```
+
+### Update
+
+```python
+con.execute("""
+    UPDATE my_lake.main.products
+    SET price = 8999.0
+    WHERE id = 1
+""")
+```
+
+### Delete
+
+```python
+con.execute("""
+    DELETE FROM my_lake.main.products
+    WHERE id = 2
+""")
+```
+
+> An API is only needed when you want to expose these operations to a web application or other users.
 
 ---
 
